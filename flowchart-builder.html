@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.6/js/jsplumb.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f8fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff6f00;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-name {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .track-search {
+            padding: 10px;
+            margin-top: 10px;
+            width: 60%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        #sidebar {
+            width: 280px;
+            background-color: #f39c12;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding: 30px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        #sidebar h5 {
+            margin-top: 0;
+        }
+
+        #sidebar button {
+            background-color: #f1c40f;
+            border: none;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            width: 100%;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #sidebar button:hover {
+            background-color: #e67e22;
+        }
+
+        #workspace {
+            margin-left: 300px;
+            padding: 20px;
+            height: 100vh;
+            background: url('workspace-bg.png') center/cover no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            padding: 15px 25px;
+            background-color: #ff5722;
+            color: white;
+            border-radius: 8px;
+            cursor: move;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+
+            #workspace {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .track-search {
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            header .brand-name {
+                font-size: 28px;
+            }
+
+            #sidebar button {
+                width: 100%;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            #sidebar img {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 class="brand-name">Logistics Flowchart</h1>
+        <input type="text" class="track-search" placeholder="Search Track Number">
+    </header>
+
+    <div id="sidebar">
+        <h5>Add Node</h5>
+        <button class="add-node" data-type="Supplier">Supplier</button>
+        <button class="add-node" data-type="Warehouse">Warehouse</button>
+        <button class="add-node" data-type="Distribution">Distribution</button>
+        <button class="add-node" data-type="Retail">Retail</button>
+        <button class="add-node" data-type="Transport">Transport</button>
+        <button class="add-node" data-type="Home">Home</button>
+
+        <h5 class="flow-options">Flow Options</h5>
+        <button id="clearFlowchart">Clear Flowchart</button>
+        <button id="savePng">Save as PNG</button>
+    </div>
+
+    <div id="workspace"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let instance = jsPlumb.getInstance({
+                Container: "workspace"
+            });
+
+            function addNode(type) {
+                const nodeId = "node-" + new Date().getTime();
+                const node = document.createElement('div');
+                node.classList.add('node');
+                node.id = nodeId;
+                node.innerHTML = `${type} <button class='delete-btn'>&times;</button>`;
+                document.getElementById('workspace').appendChild(node);
+                node.style.top = "100px";
+                node.style.left = "100px";
+
+                instance.draggable(node, { containment: "parent" });
+                instance.makeSource(node, { anchor: "Continuous" });
+                instance.makeTarget(node, { anchor: "Continuous" });
+
+                const deleteButton = node.querySelector('.delete-btn');
+                deleteButton.addEventListener('click', function () {
+                    instance.removeAllEndpoints(node.id);
+                    node.remove();
+                });
+            }
+
+            document.querySelectorAll('.add-node').forEach(button => {
+                button.addEventListener('click', function () {
+                    addNode(this.getAttribute('data-type'));
+                });
+            });
+
+            document.getElementById('clearFlowchart').addEventListener('click', function () {
+                document.getElementById('workspace').innerHTML = '';
+                instance.deleteEveryConnection();
+            });
+
+            document.getElementById('savePng').addEventListener('click', function () {
+                html2canvas(document.getElementById('workspace')).then(canvas => {
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL("image/png");
+                    link.download = "flowchart.png";
+                    link.click();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
