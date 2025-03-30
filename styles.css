@@ -36,10 +36,12 @@ button {
     border: none;
     padding: 12px;
     margin: 5px;
-    width: 80%;
+    width: 100%; /* Ensure buttons take up the full width of their container */
+    max-width: 300px; /* Limit the maximum width for buttons */
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
 }
 
 button:hover {
