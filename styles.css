@@ -13,8 +13,8 @@ body {
     background-color: white;
     padding: 40px;
     margin-top: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
     text-align: center;
     width: 90%;
     max-width: 500px;
@@ -36,15 +36,19 @@ button {
     width: 100%;
     padding: 14px 0;
     font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
+    font-weight: 600;
+    background-color: #007BFF;
     color: white;
+    border: none;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+    backdrop-filter: blur(4px);
 }
 
-/* Hover effects */
+/* Hover effect */
 button:hover {
-    opacity: 0.9;
+    background-color: #0056b3;
+    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
 }
