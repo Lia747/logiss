@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Slotting Optimizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            color: #0077b6;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 3px #aaa;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px 0;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #023e8a;
+        }
+
+        .accordion {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Warehouse Slotting Optimizer</h1>
+
+    <div class="grid-container">
+        <div class="section">
+            <h3>1. CSV Grid</h3>
+            <input type="file">
+        </div>
+
+        <div class="section">
+            <h3>2. Dock & Obstacles</h3>
+            <label>Dock (row, col):</label>
+            <input type="text" placeholder="0,0">
+            <label>Obstacles (row,col pairs):</label>
+            <textarea rows="3" placeholder="1,3 2,4 5,6"></textarea>
+        </div>
+
+        <div class="section">
+            <h3>3. ABC Ratios (%)</h3>
+            <label>A %</label>
+            <input type="number" value="20">
+            <label>B %</label>
+            <input type="number" value="30">
+            <label>C %</label>
+            <input type="number" value="50">
+        </div>
+
+        <div class="section">
+            <h3>4. Travel-Cost Params</h3>
+            <label>Step cost</label>
+            <input type="number" value="1.0">
+            <label>Turn cost</label>
+            <input type="number" value="0.5">
+            <label>Obstacle cost</label>
+            <input type="number" value="5.0">
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>5. Actions</h3>
+        <button>Run Optimization</button>
+        <button>Download CSV</button>
+        <button style="background-color: #ff6b6b;">Reset All</button>
+    </div>
+
+    <div class="accordion">▶ Raw Grid Preview</div>
+    <div class="accordion">▶ Pareto Analysis</div>
+    <div class="accordion">▶ Initial Heatmap</div>
+    <div class="accordion">▶ Optimized Layout (Heatmap)</div>
+    <div class="accordion">▶ Optimized Layout (Table)</div>
+</body>
+
+</html>
